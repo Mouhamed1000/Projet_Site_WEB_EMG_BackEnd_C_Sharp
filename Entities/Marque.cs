@@ -8,9 +8,6 @@ namespace EMG_MED1000_BACKEND.Entities
         //La liste des modèles associés à la marque
         private List<Modele> Modeles;
 
-        //Propriété de navigation
-        public Modele modele { get; set; }
-
         //Déclaration d'un constructeur sans paramètre de la classe pour y initaliser notre objet Marque
         public Marque()
         {

@@ -1,56 +1,33 @@
 namespace EMG_MED1000_BACKEND.Entities
 {
+    using System.Text.Json.Serialization;
+
     public class Modele
     {
-        private int ModeleId;
-        private String NomModele;
-        private DateTime AnneeModele;
+        //Définition des propriétés de notre entité Modele avec leurs getters et setters
+        public int ModeleId { get; set; }
+
+        public string NomModele { get; set; }
+
+        public DateTime AnneeModele { get; set; }
 
         //Pour une marque donnée d'une voiture, il doit être disponible ses modèles
         //Donc dans l'entité Modele, il y'aura l'id de la marque qui est une clé étrangère
-        private int MarqueId;
-
+        public int MarqueId { get; set; }
         //Propriété de navigation 
+        [JsonIgnore]
         public Marque Marque { get; set; }
 
         // Constructeur par défaut sans paramètres pour EF Core
         public Modele() {}
 
         //Déclaration d'un constructeur de la classe pour y initaliser notre objet Modele
-        public Modele (String _NomModele, DateTime _AnneeModele, int marqueId)
+        public Modele (String nomModele, DateTime anneeModele, int marqueId)
         {
-            NomModele = _NomModele;
-            AnneeModele = _AnneeModele;
+            NomModele = nomModele;
+            AnneeModele = anneeModele;
             MarqueId = marqueId;
         }
-
-
-        //Définition des getters et setters
-        public int ModelId
-        {
-            get { return ModeleId; }
-            set { ModeleId = value; }
-        }
-
-        public String nomModele
-        {
-            get { return NomModele; }
-            set { NomModele= value; }
-        }
-
-        public DateTime anneeModele
-        {
-            get { return AnneeModele; }
-            set { AnneeModele = value; }
-        }
-
-        public int MarqId
-        {
-            get { return MarqueId; }
-            set { MarqueId = value; }
-        }
-
-
-
     }
+
 }
