@@ -13,11 +13,11 @@ public class MarqueService
     }
 
     //Méthode pour créer une marque
-    public async Task<Marque> CreateMarque(String _NomMarque, List<Modele> _Modeles)
+    public async Task<Marque> CreateMarque(String nomMarque, List<Modele> modeles)
     {
         // On verifie si une marque avec ce nom existe déjà
         var existingMarque = await _context.Marques
-                                .FirstOrDefaultAsync(m => m.NomMarq == _NomMarque);
+                                .FirstOrDefaultAsync(m => m.NomMarque == nomMarque);
 
         if (existingMarque != null)
         {
@@ -25,22 +25,22 @@ public class MarqueService
         }
 
         //On Vérifie l'unicité des modèles associés
-        foreach (var modele in _Modeles)
+        foreach (var modele in modeles)
         {
             var existingModele = await _context.Modeles
-                .FirstOrDefaultAsync(m => m.nomModele == modele.nomModele);
+                .FirstOrDefaultAsync(m => m.NomModele == modele.NomModele);
 
             if (existingModele != null)
             {
-                throw new Exception($"Un modèle avec le nom {modele.nomModele} existe déjà.");
+                throw new Exception($"Un modèle avec le nom {modele.NomModele} existe déjà.");
             }
         }
 
         //Création d'un objet Marque sans utiliser le constructeur
         var marque = new Marque()
         {
-            NomMarq = _NomMarque,
-            ListModele = _Modeles ?? new List<Modele>()
+            NomMarque = nomMarque,
+            Modeles = modeles ?? new List<Modele>()
         };
 
         //Ajout de l'entité marque au _context
@@ -53,7 +53,7 @@ public class MarqueService
     }
 
     //Méthode pour modifier une marque
-    public async Task<bool> UpdateMarque(int id, String _NomMarque, List<Modele> _Modeles)
+    public async Task<bool> UpdateMarque(int id, String nomMarque, List<Modele> modeles)
     {
         //Une fois que l'id est renseigné, on recherche l'id dans la table de la base de données
         var marque = await _context.Marques.FindAsync(id);
@@ -63,8 +63,8 @@ public class MarqueService
         }
 
         //Si la marque existe, on met à jour les propriétés
-        marque.NomMarq = _NomMarque;
-        marque.ListModele = _Modeles;
+        marque.NomMarque = nomMarque;
+        marque.Modeles = modeles;
 
         //Ici, on met à jour la table à travers le _context
         _context.Marques.Update(marque);
@@ -103,8 +103,8 @@ public class MarqueService
     public async Task<Marque> GetMarqueById(int id)
     {
         return await _context.Marques
-            .Include(m => m.ListModele) 
-            .FirstOrDefaultAsync(m => m.MarqId == id);
+            .Include(m => m.Modeles) 
+            .FirstOrDefaultAsync(m => m.MarqueId == id);
     }
    
 }

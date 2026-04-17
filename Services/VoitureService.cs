@@ -48,10 +48,10 @@ public class VoitureService
     }
 
     //Méthode pour créer une voiture
-    public async Task<Voiture> CreateVoiture(StatutVoiture _statut, String _photo, String _description, DateTime _AnneeVoiture, int _MarqueId)
+    public async Task<Voiture> CreateVoiture(StatutVoiture statut, String photo, String description, DateTime anneeVoiture, int marqueId)
     {
         //On utilise le constructeur Voiture(...) pour initialiser notre objet voiture
-        var voiture = new Voiture(_statut, _photo, _description, _AnneeVoiture, _MarqueId);
+        var voiture = new Voiture(statut, photo, description, anneeVoiture, marqueId);
 
         //Ajout de l'entité voiture au _context
         _context.Voitures.Add(voiture);
@@ -63,7 +63,7 @@ public class VoitureService
     }
 
     //Méthode pour modifier une voiture
-    public async Task<bool> UpdateVoiture(int id, StatutVoiture _statut, String _photo, String _description, DateTime _AnneeVoiture, int _MarqueId)
+    public async Task<bool> UpdateVoiture(int id, StatutVoiture statut, String photo, String description, DateTime anneeVoiture, int marqueId)
     {
         //Une fois qu'un id est donné, on recherche l'id dans la table de la base de données
         var voiture = await _context.Voitures.FindAsync(id);
@@ -73,11 +73,11 @@ public class VoitureService
         }
 
         //Si la voiture existe, on met à jour ses propriétés avec nos setters
-        voiture.statutVoiture = _statut;
-        voiture.photoVoiture = _photo;
-        voiture.descrVoiture = _description;
-        voiture.anneeVoiture = _AnneeVoiture;
-        voiture.MarqId = _MarqueId;
+        voiture.Statut = statut;
+        voiture.Photo = photo;
+        voiture.Description = description;
+        voiture.AnneeVoiture = anneeVoiture;
+        voiture.MarqueId = marqueId;
 
         //On met à jour ici la table
         _context.Voitures.Update(voiture);
@@ -93,7 +93,7 @@ public class VoitureService
         //Ici, on vérifie si l'id fournie de la voiture existe rééllement dans la table de la base de données 
         var voiture = await _context.Voitures.FindAsync(id);
         if (voiture == null)
-            throw new KeyNotFoundException("Voiture introuvable");
+            return false;
 
         //Suppression de l'entité voiture au _context
         _context.Voitures.Remove(voiture);
@@ -108,8 +108,8 @@ public class VoitureService
     public async Task<List<Voiture>> GetAllVoituresAsync()
     {
         //On envoie aussi la marque et modele pour chaque voiture ici
-        return await _context.Voitures  .Include(m => m.marque)
-                                        .ThenInclude(v => v.modele)
+        return await _context.Voitures  .Include(m => m.Marque)
+                                        .ThenInclude(v => v.Modeles)
                                         .ToListAsync();
     }
 
@@ -124,9 +124,9 @@ public class VoitureService
         }
 
         return await _context.Voitures
-            .Include(m => m.marque)
-            .ThenInclude(v => v.modele)
-            .FirstOrDefaultAsync(v => v.VoitId == id);
+            .Include(v => v.Marque)
+            .ThenInclude(m => m.Modeles)
+            .FirstOrDefaultAsync(v => v.VoitureId == id);
             
     }
 

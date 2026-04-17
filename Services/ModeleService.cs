@@ -28,7 +28,7 @@ public class ModeleService
     }
 
     //Méthode pour modifier un modele
-    public async Task<bool> UpdateModele(int id, String _NomModele, DateTime _AnneeModele, int marqueId)
+    public async Task<bool> UpdateModele(int id, String nomModele, DateTime anneeModele, int marqueId)
     {
         //On vérifie l'id renseigné au niveau de notre table de la base de données
         var modele = await _context.Modeles.FindAsync(id);
@@ -38,9 +38,9 @@ public class ModeleService
             return false;
         }
 
-        modele.nomModele = _NomModele;
-        modele.anneeModele = _AnneeModele;
-        modele.MarqId = marqueId;
+        modele.NomModele = nomModele;
+        modele.AnneeModele = anneeModele;
+        modele.MarqueId = marqueId;
 
         //Ici, on met à jour la table via le _context
         _context.Modeles.Update(modele);
@@ -72,7 +72,7 @@ public class ModeleService
     public async Task<List<Modele>> GetAllModelesAsync(int marqueId)
     {
         return await _context.Modeles
-                                    . Where(m => m.MarqId == marqueId)
+                                    . Where(m => m.MarqueId == marqueId)
                                     .ToListAsync();
     }
 
