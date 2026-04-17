@@ -38,29 +38,29 @@ namespace EMG_MED1000_BACKEND.Models
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Marque>()
-            .HasKey(m => m.MarqId);
+            .HasKey(m => m.MarqueId);
 
             // On s'assure que Nom de la Marque est unique dans la table Marques
             modelBuilder.Entity<Marque>()
-                .HasIndex(m => m.NomMarq)
+                .HasIndex(m => m.NomMarque)
                 .IsUnique();
 
             modelBuilder.Entity<Modele>()
-                .HasKey(v => v.ModelId);
+                .HasKey(v => v.ModeleId);
 
             modelBuilder.Entity<Voiture>()
-                .HasKey(l => l.VoitId);
+                .HasKey(l => l.VoitureId);
 
             //On s'assure que NomModele est unique dans la table Modeles
             modelBuilder.Entity<Modele>()
-                .HasIndex(m => m.nomModele)
+                .HasIndex(m => m.NomModele)
                 .IsUnique();
 
             // Configuration de la relation entre Marque et Modele : Une marque peut avoir plusieurs modèles
             modelBuilder.Entity<Marque>()
-                .HasMany(m => m.ListModele)
+                .HasMany(m => m.Modeles)
                 .WithOne(m => m.Marque)
-                .HasForeignKey(m => m.MarqId)
+                .HasForeignKey(m => m.MarqueId)
                 .OnDelete(DeleteBehavior.Cascade); 
         }
     } 
