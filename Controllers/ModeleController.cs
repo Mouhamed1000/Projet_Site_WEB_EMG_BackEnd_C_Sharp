@@ -39,10 +39,15 @@ public class ModeleController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateModele([FromBody] Modele modele)
     {
-        //Création du modele via notre service en lui fournissant les différents paramètres
-        var createdModele = await _modeleService.CreateModele(modele.nomModele, modele.anneeModele, modele.MarqId);
+        if (modele == null || string.IsNullOrWhiteSpace(modele.NomModele))
+        {
+            return BadRequest("Nom du modèle requis");
+        }
 
-        return StatusCode(201, createdModele);
+        //Création du modele via notre service en lui fournissant les différents paramètres
+        var createdModele = await _modeleService.CreateModele(modele.NomModele, modele.AnneeModele, modele.MarqueId);
+
+        return CreatedAtAction(nameof(GetModeleById), new { id = createdModele.ModeleId }, createdModele);
     }
 
     [HttpPut("{id}")]
@@ -52,7 +57,7 @@ public class ModeleController : ControllerBase
         if (modele == null || id <=0)
             return BadRequest("Les données sont invalides");
 
-        var success = await _modeleService.UpdateModele(id, modele.nomModele, modele.anneeModele, modele.MarqId);
+        var success = await _modeleService.UpdateModele(id, modele.NomModele, modele.AnneeModele, modele.MarqueId);
         
         if (!success)
             return NotFound($"Aucun modele trouvé avec l'ID {id}");

@@ -27,15 +27,18 @@ public class MarqueController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateMarque([FromBody] Marque marque)
     {
-        if (marque == null)
+        if (marque == null || string.IsNullOrWhiteSpace(marque.NomMarque))
         {
-            return BadRequest("Le corps de la requête est vide.");
+            return BadRequest("Nom de la marque requis");
         }
 
         //Création de la marque via notre service en lui fournissant les différents paramètres
-        var createdMarque = await _marqueService.CreateMarque(marque.NomMarq, marque.ListModele);
+        var createdMarque = await _marqueService.CreateMarque(
+            marque.NomMarque,
+            marque.Modeles ?? new List<Modele>()
+        );
 
-        return StatusCode(201, createdMarque);
+        return CreatedAtAction(nameof(GetMarqueById), new { id = createdMarque.MarqueId }, createdMarque);
     }
 
     [HttpPut("{id}")]
@@ -46,7 +49,11 @@ public class MarqueController : ControllerBase
         if (marque == null || id <=0)
             return BadRequest("Les données sont invalides");
 
-        var success = await _marqueService.UpdateMarque(id, marque.NomMarq, marque.ListModele);
+        var success = await _marqueService.UpdateMarque(
+            id, 
+            marque.NomMarque, 
+            marque.Modeles ?? new List<Modele>()
+            );
         
         if (!success)
             return NotFound($"Aucune marque trouvée avec l'ID {id}");

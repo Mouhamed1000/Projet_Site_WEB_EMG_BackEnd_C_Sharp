@@ -1,5 +1,4 @@
 using EMG_MED1000_BACKEND.Entities;
-using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -25,14 +24,19 @@ public class VoitureController : ControllerBase
     }
 
     [HttpPost("upload-and-create")]
-    public async Task<IActionResult> UploadAndCreate([FromForm] IFormFile file, [FromForm] StatutVoiture _statut, [FromForm] string _photo,
-                                                     [FromForm] string _description, [FromForm] DateTime _anneeVoiture, [FromForm] int _MarqueId)
+    public async Task<IActionResult> UploadAndCreate([FromForm] IFormFile file, [FromForm] StatutVoiture statut,
+                                                     [FromForm] string description, [FromForm] DateTime anneeVoiture, [FromForm] int marqueId)
     {
+        if (file == null || file.Length == 0)
+        {
+            return BadRequest("Image obligatoire");
+        }
+
         //Upload de l'image
         var imagePath = await _voitureService.UploadImageAsync(file);
 
         //Création de la voiture via notre service en lui fournissant les différents paramètres
-        var createdVoiture = await _voitureService.CreateVoiture(_statut, _photo, _description, _anneeVoiture, _MarqueId);
+        var createdVoiture = await _voitureService.CreateVoiture(statut, imagePath, description, anneeVoiture, marqueId);
 
         return StatusCode(201, createdVoiture);
     }
@@ -43,7 +47,7 @@ public class VoitureController : ControllerBase
         if (voiture == null || id <=0)
             return BadRequest("Les données sont invalides");
 
-        var success = await _voitureService.UpdateVoiture(id, voiture.statutVoiture, voiture.photoVoiture, voiture.descrVoiture, voiture.anneeVoiture, voiture.MarqId);
+        var success = await _voitureService.UpdateVoiture(id, voiture.Statut, voiture.Photo, voiture.Description, voiture.AnneeVoiture, voiture.MarqueId);
         
         if (!success)
             return NotFound($"Aucune voiture trouvée avec l'ID {id}");
