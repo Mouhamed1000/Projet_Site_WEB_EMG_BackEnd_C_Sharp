@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EMG_Med1000_backend.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialVoitureDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,15 +19,14 @@ namespace EMG_Med1000_backend.Migrations
                 name: "Marques",
                 columns: table => new
                 {
-                    MarqId = table.Column<int>(type: "int", nullable: false)
+                    MarqueId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    modeleModelId = table.Column<int>(type: "int", nullable: false),
-                    NomMarq = table.Column<string>(type: "varchar(255)", nullable: false)
+                    NomMarque = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Marques", x => x.MarqId);
+                    table.PrimaryKey("PK_Marques", x => x.MarqueId);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -35,21 +34,21 @@ namespace EMG_Med1000_backend.Migrations
                 name: "Modeles",
                 columns: table => new
                 {
-                    ModelId = table.Column<int>(type: "int", nullable: false)
+                    ModeleId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    nomModele = table.Column<string>(type: "varchar(255)", nullable: false)
+                    NomModele = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    anneeModele = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    MarqId = table.Column<int>(type: "int", nullable: false)
+                    AnneeModele = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    MarqueId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Modeles", x => x.ModelId);
+                    table.PrimaryKey("PK_Modeles", x => x.ModeleId);
                     table.ForeignKey(
-                        name: "FK_Modeles_Marques_MarqId",
-                        column: x => x.MarqId,
+                        name: "FK_Modeles_Marques_MarqueId",
+                        column: x => x.MarqueId,
                         principalTable: "Marques",
-                        principalColumn: "MarqId",
+                        principalColumn: "MarqueId",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -58,77 +57,59 @@ namespace EMG_Med1000_backend.Migrations
                 name: "Voitures",
                 columns: table => new
                 {
-                    VoitId = table.Column<int>(type: "int", nullable: false)
+                    VoitureId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    marqueMarqId = table.Column<int>(type: "int", nullable: false),
-                    statutVoiture = table.Column<int>(type: "int", nullable: false),
-                    photoVoiture = table.Column<string>(type: "longtext", nullable: false)
+                    Statut = table.Column<int>(type: "int", nullable: false),
+                    Photo = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    descrVoiture = table.Column<string>(type: "longtext", nullable: false)
+                    Description = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    anneeVoiture = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    MarqId = table.Column<int>(type: "int", nullable: false)
+                    AnneeVoiture = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    MarqueId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Voitures", x => x.VoitId);
+                    table.PrimaryKey("PK_Voitures", x => x.VoitureId);
                     table.ForeignKey(
-                        name: "FK_Voitures_Marques_marqueMarqId",
-                        column: x => x.marqueMarqId,
+                        name: "FK_Voitures_Marques_MarqueId",
+                        column: x => x.MarqueId,
                         principalTable: "Marques",
-                        principalColumn: "MarqId",
+                        principalColumn: "MarqueId",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Marques_modeleModelId",
+                name: "IX_Marques_NomMarque",
                 table: "Marques",
-                column: "modeleModelId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Marques_NomMarq",
-                table: "Marques",
-                column: "NomMarq",
+                column: "NomMarque",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Modeles_MarqId",
+                name: "IX_Modeles_MarqueId",
                 table: "Modeles",
-                column: "MarqId");
+                column: "MarqueId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Modeles_nomModele",
+                name: "IX_Modeles_NomModele",
                 table: "Modeles",
-                column: "nomModele",
+                column: "NomModele",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Voitures_marqueMarqId",
+                name: "IX_Voitures_MarqueId",
                 table: "Voitures",
-                column: "marqueMarqId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Marques_Modeles_modeleModelId",
-                table: "Marques",
-                column: "modeleModelId",
-                principalTable: "Modeles",
-                principalColumn: "ModelId",
-                onDelete: ReferentialAction.Cascade);
+                column: "MarqueId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Marques_Modeles_modeleModelId",
-                table: "Marques");
+            migrationBuilder.DropTable(
+                name: "Modeles");
 
             migrationBuilder.DropTable(
                 name: "Voitures");
-
-            migrationBuilder.DropTable(
-                name: "Modeles");
 
             migrationBuilder.DropTable(
                 name: "Marques");

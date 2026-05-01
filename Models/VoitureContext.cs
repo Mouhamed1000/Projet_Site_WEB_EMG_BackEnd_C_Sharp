@@ -16,9 +16,9 @@ namespace EMG_MED1000_BACKEND.Models
         }
 
         //entitées
-        public DbSet<Voiture> Voitures {get; set; }
-        public DbSet<Marque> Marques {get; set; }
-        public DbSet<Modele> Modeles {get; set; }
+        public DbSet<Voiture> Voitures { get; set; }
+        public DbSet<Marque> Marques { get; set; }
+        public DbSet<Modele> Modeles { get; set; }
 
         //Implémentation de la méthode OnConfiguring (...) permettant l'import des configs de notre base de données
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -37,31 +37,45 @@ namespace EMG_MED1000_BACKEND.Models
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Marque>()
-            .HasKey(m => m.MarqueId);
+            // Configuration MARQUE
+            modelBuilder.Entity<Marque>(entity =>
+            {
+                // Clé primaire
+                entity.HasKey(m => m.MarqueId);
+                entity.Property(m => m.MarqueId).ValueGeneratedOnAdd();
 
-            // On s'assure que Nom de la Marque est unique dans la table Marques
-            modelBuilder.Entity<Marque>()
-                .HasIndex(m => m.NomMarque)
-                .IsUnique();
+                // Nom unique
+                entity.HasIndex(m => m.NomMarque).IsUnique();
 
-            modelBuilder.Entity<Modele>()
-                .HasKey(v => v.ModeleId);
+                // Relation : une marque a plusieurs modeles
+                entity.HasMany(m => m.Modeles)
+                      .WithOne(mo => mo.Marque)
+                      .HasForeignKey(mo => mo.MarqueId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
 
-            modelBuilder.Entity<Voiture>()
-                .HasKey(l => l.VoitureId);
+            // Configuration MODELE
+            modelBuilder.Entity<Modele>(entity =>
+            {
+                // Clé primaire
+                entity.HasKey(m => m.ModeleId);
+                entity.Property(m => m.ModeleId).ValueGeneratedOnAdd();
 
-            //On s'assure que NomModele est unique dans la table Modeles
-            modelBuilder.Entity<Modele>()
-                .HasIndex(m => m.NomModele)
-                .IsUnique();
+                // Nom unique
+                entity.HasIndex(m => m.NomModele).IsUnique();
+            });
 
-            // Configuration de la relation entre Marque et Modele : Une marque peut avoir plusieurs modèles
-            modelBuilder.Entity<Marque>()
-                .HasMany(m => m.Modeles)
-                .WithOne(m => m.Marque)
-                .HasForeignKey(m => m.MarqueId)
-                .OnDelete(DeleteBehavior.Cascade); 
+            // Configuration VOITURE
+            modelBuilder.Entity<Voiture>(entity =>
+            {
+                // Clé primaire
+                entity.HasKey(v => v.VoitureId);
+                entity.Property(v => v.VoitureId).ValueGeneratedOnAdd();
+
+                // Champs optionnels
+                entity.Property(v => v.Photo).IsRequired(false);
+                entity.Property(v => v.Description).IsRequired(false);
+            });
         }
-    } 
+    }
 }

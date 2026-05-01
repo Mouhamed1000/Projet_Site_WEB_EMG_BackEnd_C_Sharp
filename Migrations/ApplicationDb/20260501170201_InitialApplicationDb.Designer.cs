@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EMG_Med1000_backend.Migrations.ApplicationDb
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250131222524_AddIdentitySchema")]
-    partial class AddIdentitySchema
+    [Migration("20260501170201_InitialApplicationDb")]
+    partial class InitialApplicationDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

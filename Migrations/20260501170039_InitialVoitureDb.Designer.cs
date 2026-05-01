@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EMG_Med1000_backend.Migrations
 {
     [DbContext(typeof(VoitureContext))]
-    [Migration("20250131221336_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260501170039_InitialVoitureDb")]
+    partial class InitialVoitureDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,52 +27,47 @@ namespace EMG_Med1000_backend.Migrations
 
             modelBuilder.Entity("EMG_MED1000_BACKEND.Entities.Marque", b =>
                 {
-                    b.Property<int>("MarqId")
+                    b.Property<int>("MarqueId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("MarqId"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("MarqueId"));
 
-                    b.Property<string>("NomMarq")
+                    b.Property<string>("NomMarque")
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
-                    b.Property<int>("modeleModelId")
-                        .HasColumnType("int");
+                    b.HasKey("MarqueId");
 
-                    b.HasKey("MarqId");
-
-                    b.HasIndex("NomMarq")
+                    b.HasIndex("NomMarque")
                         .IsUnique();
-
-                    b.HasIndex("modeleModelId");
 
                     b.ToTable("Marques");
                 });
 
             modelBuilder.Entity("EMG_MED1000_BACKEND.Entities.Modele", b =>
                 {
-                    b.Property<int>("ModelId")
+                    b.Property<int>("ModeleId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("ModelId"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("ModeleId"));
 
-                    b.Property<int>("MarqId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("anneeModele")
+                    b.Property<DateTime>("AnneeModele")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("nomModele")
+                    b.Property<int>("MarqueId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NomModele")
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
-                    b.HasKey("ModelId");
+                    b.HasKey("ModeleId");
 
-                    b.HasIndex("MarqId");
+                    b.HasIndex("MarqueId");
 
-                    b.HasIndex("nomModele")
+                    b.HasIndex("NomModele")
                         .IsUnique();
 
                     b.ToTable("Modeles");
@@ -80,55 +75,39 @@ namespace EMG_Med1000_backend.Migrations
 
             modelBuilder.Entity("EMG_MED1000_BACKEND.Entities.Voiture", b =>
                 {
-                    b.Property<int>("VoitId")
+                    b.Property<int>("VoitureId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("VoitId"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("VoitureId"));
 
-                    b.Property<int>("MarqId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("anneeVoiture")
+                    b.Property<DateTime>("AnneeVoiture")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("descrVoiture")
-                        .IsRequired()
+                    b.Property<string>("Description")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("marqueMarqId")
+                    b.Property<int>("MarqueId")
                         .HasColumnType("int");
 
-                    b.Property<string>("photoVoiture")
-                        .IsRequired()
+                    b.Property<string>("Photo")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("statutVoiture")
+                    b.Property<int>("Statut")
                         .HasColumnType("int");
 
-                    b.HasKey("VoitId");
+                    b.HasKey("VoitureId");
 
-                    b.HasIndex("marqueMarqId");
+                    b.HasIndex("MarqueId");
 
                     b.ToTable("Voitures");
-                });
-
-            modelBuilder.Entity("EMG_MED1000_BACKEND.Entities.Marque", b =>
-                {
-                    b.HasOne("EMG_MED1000_BACKEND.Entities.Modele", "modele")
-                        .WithMany()
-                        .HasForeignKey("modeleModelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("modele");
                 });
 
             modelBuilder.Entity("EMG_MED1000_BACKEND.Entities.Modele", b =>
                 {
                     b.HasOne("EMG_MED1000_BACKEND.Entities.Marque", "Marque")
-                        .WithMany("ListModele")
-                        .HasForeignKey("MarqId")
+                        .WithMany("Modeles")
+                        .HasForeignKey("MarqueId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -137,18 +116,18 @@ namespace EMG_Med1000_backend.Migrations
 
             modelBuilder.Entity("EMG_MED1000_BACKEND.Entities.Voiture", b =>
                 {
-                    b.HasOne("EMG_MED1000_BACKEND.Entities.Marque", "marque")
+                    b.HasOne("EMG_MED1000_BACKEND.Entities.Marque", "Marque")
                         .WithMany()
-                        .HasForeignKey("marqueMarqId")
+                        .HasForeignKey("MarqueId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("marque");
+                    b.Navigation("Marque");
                 });
 
             modelBuilder.Entity("EMG_MED1000_BACKEND.Entities.Marque", b =>
                 {
-                    b.Navigation("ListModele");
+                    b.Navigation("Modeles");
                 });
 #pragma warning restore 612, 618
         }

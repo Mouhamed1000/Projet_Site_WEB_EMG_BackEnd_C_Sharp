@@ -68,11 +68,11 @@ Entities/
  RegisterModel.cs
  Voiture.cs
 Migrations/
- 20250131221336_InitialCreate.cs
- 20250131221336_InitialCreate.Designer.cs
+ 20260501170039_InitialVoitureDb.cs
+ 20260501170039_InitialVoitureDb.Designer.cs
  ApplicationDb/
-  20250131222524_AddIdentitySchema.cs
-  20250131222524_AddIdentitySchema.Designer.cs
+  20260501170201_InitialApplicationDb.cs
+  20260501170201_InitialApplicationDb.Designer.cs
   ApplicationDbContextModelSnapshot.cs
  VoitureContextModelSnapshot.cs
 Models/
